@@ -6,7 +6,6 @@ using System.Xml.Linq;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Locator;
 using Nuke.Common;
-using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -18,7 +17,6 @@ using Nuke.Common.Tools.VSTest;
 using Nuke.Common.Utilities.Collections;
 
 using static Nuke.Common.IO.FileSystemTasks;
-using static Nuke.Common.Logger;
 using static Nuke.Common.Tooling.ProcessTasks;
 using static Nuke.Common.Tools.Chocolatey.ChocolateyTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
@@ -27,7 +25,6 @@ using static Nuke.Common.Tools.Npm.NpmTasks;
 using static Nuke.Common.Tools.VSTest.VSTestTasks;
 using Project = Nuke.Common.ProjectModel.Project;
 
-[CheckBuildProjectConfigurations]
 partial class Build : NukeBuild
 {
     public Build()
@@ -239,7 +236,9 @@ partial class Build : NukeBuild
                 ("NSwag.Sample.NETCore31", "NetCore31"),
                 ("NSwag.Sample.NET50", "Net50"),
                 ("NSwag.Sample.NET60", "Net60"),
-                ("NSwag.Sample.NET60Minimal", "Net60")
+                ("NSwag.Sample.NET60Minimal", "Net60"),
+                ("NSwag.Sample.NET70", "Net70"),
+                ("NSwag.Sample.NET70Minimal", "Net70")
             };
 
             foreach (var (projectName, runtime) in dotnetTargets)
@@ -355,7 +354,7 @@ partial class Build : NukeBuild
 
         PublishConsoleProject(consoleX86Project, new[] { "net461" });
         PublishConsoleProject(consoleProject, new[] { "net461" });
-        PublishConsoleProject(consoleCoreProject, new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0", "net6.0" });
+        PublishConsoleProject(consoleCoreProject, new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0", "net6.0", "net7.0" });
 
         void CopyConsoleBinaries(AbsolutePath target)
         {
@@ -371,6 +370,7 @@ partial class Build : NukeBuild
             CopyDirectoryRecursively(consoleCoreDirectory / "netcoreapp3.1" / "publish", target / "NetCore31");
             CopyDirectoryRecursively(consoleCoreDirectory / "net5.0" / "publish", target / "Net50");
             CopyDirectoryRecursively(consoleCoreDirectory / "net6.0" / "publish", target / "Net60");
+            CopyDirectoryRecursively(consoleCoreDirectory / "net7.0" / "publish", target / "Net70");
         }
 
         Serilog.Log.Information("Copy published Console for NSwagStudio");
